@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <style>
+        body{
+            margin:0 auto;
+        }
+        div{
+            float:left;
+        }
+        div:nth-child(4n+1){
+            clear:both;
+        }
+        .foto
+        {
+            width: 100px;
+        }
+    </style>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular-route.js"></script>
+    <script>
+            var app = angular.module("myApp", ["ngRoute"]);
+            app.config(function($routeProvider) {
+                $routeProvider
+                .when("/", {
+                    templateUrl : "czolowa.html"
+                })
+                .when("/thirty", {
+                    templateUrl : "gamefield.html",
+                    controller : "mainCtrl"
+                })
+                .when("/sixty", {
+                    templateUrl : "gamefield.html",
+                    controller : "mainCtrl"
+                })
+                .when("/ninety", {
+                    templateUrl : "gamefield.html",
+                    controller : "mainCtrl"
+                })
+                .otherwise({
+                    redirectTo : "/"
+               })
+                
+
+
+            });
+            app.controller("mainCtrl", function ($scope, $location, $timeout) {
+                //FUNCKJA DO MIESZANIA
+                var shuffleArray = function(array) {
+                      var m = array.length, t, i;
+
+                      // Whilosc_klikow there remain elements to shuffle
+                      while (m) {
+                        // Pick a remaining element…
+                        i = Math.floor(Math.random() * m--);
+
+                        // And swap it with the current element.
+                        t = array[m];
+                        array[m] = array[i];
+                        array[i] = t;
+                      }
+                      //console.log(array);
+                       return array;   
+                }
+                $scope.ilosc_czasu = "";
+                $scope.message = "";
+                $scope.info = false;
+                $scope.ilosc_czasu = $location.path().split("/")[1];
+                console.log($scope.ilosc_czasu);
+                $scope.imageClick = false;
+                $scope.msg = "Main Controller";
+                $scope.boardArr = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+                $scope.cardsArr = [1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8];
+                $scope.shuffle = shuffleArray($scope.cardsArr);
+                $scope.click2 = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false];
+                var ilosc_klikow = 0;
+                var clickedBefore = -1;
+                
+                $scope.click = function(index) {
+                  $scope.imageClick=true;
+                  if(ilosc_klikow < 2 && !$scope.click2[index]) {
+                    $scope.boardArr[index] = $scope.shuffle[index];
+                    if(clickedBefore != -1 && $scope.shuffle[clickedBefore] == $scope.shuffle[index]) {
+                      $scope.click2[clickedBefore] = true;
+                      $scope.click2[index] = true;
+                    }
+                    
+                    //$scope.click[index] = true;
+                    if(index == clickedBefore)
+                    {
+                        ilosc_klikow=1;
+                        clickedBefore = index;
+                    }
+                    else
+                    {
+                        ilosc_klikow++;
+                        clickedBefore = index;
+                    }
+                    if(ilosc_klikow == 2) {
+                      $timeout(function() {
+                        for(var i = 0; i < $scope.boardArr.length; i++) {
+                          if(!$scope.click2[i]) {
+                            $scope.boardArr[i] = 0;
+                          }
+                        }
+                        ilosc_klikow = 0;
+                        clickedBefore = 0;
+                      }, 1000);
+                     if($scope.click2.indexOf(false)==-1)
+                           {
+                                //alert("ŁO matko wygrałeś!");
+                                $scope.info = true;
+                                $scope.message = "Winner! :D";
+                                $scope.interval = null;
+                                $scope.ileCzasuZostalo = "";
+                           }
+                    }
+                  }
+                    
+            }
+            });
+            app.directive('gameField', function(){
+                return {
+                    templateUrl: 'play-field.html'
+                  };
+            })
+            .directive("stoper",['$interval','dateFilter', function($interval,dateFilter) {
+                return {
+                    restrict : "E",
+                    templateUrl: "stoper.html",
+                    link: function(scope,location) {
+                        //console.log(scope.ilosc_czasu);
+                        var format = "mm:ss:sss";
+                        scope.procent= 100;
+                        scope.ileCzasuZostalo= "";
+                        scope.start = new Date().getTime();
+                        scope.color = "#00AA00";
+                        scope.interval=  $interval(function() 
+                            {                     
+                            if(scope.imageClick)
+                                {   
+                                    var module;
+                                    
+                                    switch(scope.ilosc_czasu)
+                                        {
+                                            case "thirty":
+                                                module = 30000;
+                                                break;
+                                            case "sixty":
+                                                module = 60000;
+                                                break;
+                                            case "ninety":
+                                                module = 90000;
+                                                break;
+                                        }
+                                    var obecnyCzas = module - (new Date().getTime()-scope.start);
+                                    scope.ileCzasuZostalo = dateFilter(obecnyCzas,format);
+                                    scope.procent = obecnyCzas *100/module;
+                                    if(scope.procent <=0 )
+                                        {
+                                            console.log("KONIEC!!!");
+                                            $interval.cancel(scope.interval);
+                                            scope.interval= null; 
+                                            //alert("Time! Loosser!!! :D");
+                                            scope.ileCzasuZostalo = "";
+                                            scope.info = true;
+                                            scope.message = "You can try again :D";
+                                        }
+                                    else if(scope.procent < 20)
+                                       {
+                                         scope.color = "#BB0000";
+                                       } 
+                                }
+                          }, 1);
+                    }                    
+                };
+            }]);
+            
+</script>
+</head>
+
+
+<body ng-app="myApp">
+
+<p><a href="#/!czolowa">Main</a></p>
+<div ng-controller="mainCtrl"> 
+    <div ng-view>
+
+    </div>
+</div>
+
+
+</body>
+</html>

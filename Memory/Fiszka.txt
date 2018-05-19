@@ -1,0 +1,33 @@
+Punktacja "Memory" - max. 8p Sebastian Szafrañœki
+
+X    (max 2p) Routing:
+	plik g³ówny (np. index.html) posiada w html'u tylko ng-view
+	routing:
+		"/" - plik z map¹ odsy³aczy
+		przyk³adowe linki "tryb/30", "tryb/60", "tryb/90" - ten sam plik z template'm (np. "game.html")
+		pozosta³e linki odsy³aj¹ do "/"
+	w pliku "game.html" u¿yte dwa rodzaje w³asnej dyrektywy:
+		1. na elemencie np.  (XX - 30/60/90) - osobny plik z template'm
+		2. na atrybucie np. 
+  - osobny plik z template'm
+	
+	powy¿szy routing [2p]
+	inny [1p]
+X    (max 2.5p) Odliczanie czasu - element odliczaj¹cy czas (utworzona i u¿yta odpowiednia dyrektywa):
+	- warunek konieczny: stosujemy angulara tj. $interval, $timeout, angular.element, ng-click, bindowanie, inne...
+	- format zapisu mm:ss.qqq (m - cyfra minut, s - cyfra sekund, q - cyfra milisekund)
+		przyk³adowy poprawny zapis 01:01.001 a nie 1:1.1 (zera wiod¹ce!)
+	- czas p³ynie poprawnie
+	- po miniêciu 20% czasu zmiana koloru paska postêpu
+	
+	powy¿sze podpunkty musz¹ byæ spe³nione
+	- controller znajduje siê osobno (poza zdefiniowan¹ dyrektyw¹) [1p]
+	- controller w dyrektywie (link) [2.5p]
+X    (max 3p) Rozgrywka - pole gry (utworzona i u¿yta odpowiednia dyrektywa):
+	- warunek konieczny: stosujemy angulara tj. $interval, $timeout, angular.element, ng-click, bindowanie, inne...
+	- odkrywanie par + zakrycie/pozostanie odkrytymi [2p]
+	- zabezpieczenia przed zepsuciem rozgrywki (wieolokliki itp.) [1p]
+X    Zakoñczenie (0.5p)
+	- warunek konieczny: stosujemy angulara tj. $interval, $timeout, angular.element, ng-click, bindowanie, inne...
+	- ponowne rozpoczêcie rozgrywki bez odœwie¿enia strony
+	- pozbycie siê okien dialogowych na rzecz HTML'a

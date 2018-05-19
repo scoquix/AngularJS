@@ -1,0 +1,56 @@
+ <!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+  <meta charset="utf-8"/>
+  <title>AngularJS - Intro</title>
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+  <script>
+
+  var app = angular.module("myApp", []);
+  var tab=[]
+  app.controller("myCtrl", function($scope, $http) {
+    $http({
+      method : "GET",
+      url : "ajax.php",
+      params: {id: 1}
+    }).then(function mySuccess(response) {
+          $scope.tab = response.data;
+          for(var i = 0 ; i % 2 == 0 ; i++)
+          {
+
+          }
+          
+            $scope.ob ={
+              "lea":
+              "prawa": 
+            }
+          ]
+      }, function myError(response) {
+       
+        $scope.myWelcome = response.statusText;
+    });
+    $scope.klik = function(id){
+      console.log(id);
+
+    }
+  });
+
+</script>
+
+</head>
+<body ng-controller="myCtrl">
+  <div>
+	 <table>
+	 	 <tr ng-repeat="x in tab" >
+       <td id="{{$index}}" >
+        <img ng-click="klik(x.klik)" ng-src="http://atarionline.pl/biblioteka/czasopisma/img/{{ x.src }}"/>
+      </td>
+     </tr>
+    </table>
+  </div>
+
+
+
+</body>
+</html> 
